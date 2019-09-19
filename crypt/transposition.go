@@ -1,5 +1,10 @@
 package crypt
 
+import (
+	"sort"
+	"strings"
+)
+
 /*
 Реализация шифра перестановки
 */
@@ -11,16 +16,50 @@ func SetKey(intKey []int) {
 	copy(key, intKey)
 }
 
-func Encrypt(text string) string {
+func SetStringKey(stringKey string) {
+	key = make([]int, getLength(stringKey))
+	key = getKey(stringKey)
+}
+
+func getKey(word string) []int {
+	word = strings.ToLower(word)
+	sortedWord := strings.Split(word, "")
+	sort.Strings(sortedWord)
+	usedLettersMap := make(map[string]int)
+	wordLength := getLength(word)
+	resultKey := make([]int, wordLength)
+	for i := 0; i < wordLength; i++ {
+		char := word[i]
+		numberOfUsage := usedLettersMap[string(char)]
+		resultKey[i] = getIndex(sortedWord, string(char)) + numberOfUsage + 1 //+1 -so that indexing does not start at 0
+		numberOfUsage++
+		usedLettersMap[string(char)] = numberOfUsage
+	}
+	return resultKey
+}
+func getIndex(wordSet []string, subString string) int {
+	n := len(wordSet)
+	for i := 0; i < n; i++ {
+		if wordSet[i] == subString {
+			return i
+		}
+	}
+	return 0
+}
+
+func getLength(text string) int {
 	r := []rune(text)
-	textLength := len(r)
+	return len(r)
+}
+
+func Encrypt(text string) string {
 	keyLength := len(key)
+	textLength := getLength(text)
 	n := textLength % keyLength
 	for i := 0; i < keyLength-n; i++ {
 		text += " "
 	}
-	r = []rune(text)
-	textLength = len(r)
+	textLength = getLength(text)
 	result := ""
 
 	for i := 0; i < textLength; i += keyLength {
