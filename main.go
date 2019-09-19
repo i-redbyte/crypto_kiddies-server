@@ -1,14 +1,25 @@
 package main
 
 import (
-	"cryptokiddies-server/crypt"
 	"fmt"
+	"net/http"
 )
 
+func homePage(response http.ResponseWriter, req *http.Request) {
+	if req.URL.Path != "/" {
+		http.NotFound(response, req)
+		return
+	}
+	_, err := fmt.Fprint(response, "Crypto kiddies home page")
+	if err != nil {
+		panic(err)
+	}
+}
+
 func main() {
-	// TODO: Red_byte for test transposition crypt
-	crypt.SetStringKey("java and kotlin")
-	text := crypt.Encrypt("I love coding on go language")
-	fmt.Println(text)
-	fmt.Println(crypt.Decrypt(text))
+	http.HandleFunc("/", homePage)
+	err := http.ListenAndServe(":4000", nil)
+	if err != nil {
+		panic(err)
+	}
 }
