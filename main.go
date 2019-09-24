@@ -1,14 +1,42 @@
 package main
 
 import (
-	"cryptokiddies-server/crypt"
 	"fmt"
+	"github.com/braintree/manners"
+	"net/http"
+	"os"
+	"os/signal"
 )
 
 func main() {
-	// TODO: Red_byte for test transposition crypt
-	crypt.SetStringKey("java and kotlin")
-	text := crypt.Encrypt("I love coding on go language")
-	fmt.Println(text)
-	fmt.Println(crypt.Decrypt(text))
+	handler := newHandler()
+	ch := make(chan os.Signal)
+	signal.Notify(ch, os.Interrupt, os.Kill)
+	go listenForShutdown(ch)
+	err := manners.ListenAndServe(":4000", handler)
+	if err != nil {
+		panic(err)
+	}
 }
+
+func (h *handler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
+	query := req.URL.Query()
+	name := query.Get("name")
+	if name == "" {
+		name = "Crypto Punk"
+	}
+	_, _ = fmt.Fprintln(res, "Crypto kiddies home page")
+	_, _ = fmt.Fprint(res, "Hello, ", name)
+
+}
+
+func listenForShutdown(ch <-chan os.Signal) {
+	<-ch
+	manners.Close()
+}
+
+func newHandler() *handler {
+	return &handler{}
+}
+
+type handler struct{}
