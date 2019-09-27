@@ -1,42 +1,44 @@
 package main
 
 import (
+	"cryptokiddies-server/crypt"
 	"fmt"
-	"github.com/braintree/manners"
 	"net/http"
-	"os"
-	"os/signal"
 )
 
 func main() {
-	handler := newHandler()
-	ch := make(chan os.Signal)
-	signal.Notify(ch, os.Interrupt, os.Kill)
-	go listenForShutdown(ch)
-	err := manners.ListenAndServe(":4000", handler)
+	http.HandleFunc("/transparent", transparent)
+	http.HandleFunc("/hello", hello)
+	http.HandleFunc("/", hello)
+	err := http.ListenAndServe(":4000", nil)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (h *handler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
+func hello(res http.ResponseWriter, req *http.Request) {
 	query := req.URL.Query()
 	name := query.Get("name")
 	if name == "" {
-		name = "Crypto Punk"
+		name = "crypto punk"
 	}
-	_, _ = fmt.Fprintln(res, "Crypto kiddies home page")
-	_, _ = fmt.Fprint(res, "Hello, ", name)
-
+	_, _ = fmt.Fprint(res, "hello, ", name)
 }
-
-func listenForShutdown(ch <-chan os.Signal) {
-	<-ch
-	manners.Close()
+func transparent(res http.ResponseWriter, req *http.Request) {
+	fmt.Println("test")
+	query := req.URL.Query()
+	key := query.Get("key")
+	text := query.Get("text")
+	// TODO: Red_byte test data (remove it)
+	if text == "" {
+		text = "Go и Kotlin - близнецы-братья! Кто более матери истории ценен"
+	}
+	if key == "" {
+		key = "си плюс плюс"
+	}
+	crypt.SetStringKey(key)
+	encryptText := crypt.Encrypt([]rune(text))
+	fmt.Println(key, text, encryptText)
+	_, _ = fmt.Fprintln(res, "Encrypt text:", encryptText)
+	_, _ = fmt.Fprintln(res, "Decrypt text:", crypt.Decrypt([]rune(encryptText)))
 }
-
-func newHandler() *handler {
-	return &handler{}
-}
-
-type handler struct{}
