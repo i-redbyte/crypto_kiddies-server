@@ -1,8 +1,10 @@
 package main
 
 import (
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -14,7 +16,7 @@ func main() {
 	router.Handle("/cryptos", CryptoHandler).Methods("GET")
 	router.Handle("/cryptos/{slug}/info", GetCryptoHandler).Methods("POST")
 
-	err := http.ListenAndServe(":4000", router)
+	err := http.ListenAndServe(":4000", handlers.LoggingHandler(os.Stdout, router))
 	if err != nil {
 		panic(err)
 	}
