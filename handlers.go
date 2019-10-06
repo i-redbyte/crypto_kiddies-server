@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/auth0/go-jwt-middleware"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
@@ -69,6 +70,18 @@ var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reque
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 	tokenString, _ := token.SignedString(signingKey)
 	_, _ = w.Write([]byte(tokenString))
+})
+
+var GetLogin = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "html/login.html")
+})
+
+var PostLogin = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+	// TODO: Red_byte test until session
+	fmt.Println(username, password)
+	http.ServeFile(w, r, "html/index.html")
 })
 
 var NotImplemented = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

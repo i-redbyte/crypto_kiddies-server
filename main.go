@@ -16,6 +16,8 @@ func main() {
 	router.Handle("/cryptos", JwtMiddleware.Handler(CryptoHandler)).Methods("GET")
 	router.Handle("/cryptos/{slug}/info", JwtMiddleware.Handler(GetCryptoHandler)).Methods("POST")
 	router.Handle("/get-token", GetTokenHandler).Methods("GET")
+	router.Handle("/login", GetLogin).Methods("GET")
+	router.Handle("/login", PostLogin).Methods("POST")
 	err := http.ListenAndServe(":4000", handlers.LoggingHandler(os.Stdout, router))
 	if err != nil {
 		panic(err)
