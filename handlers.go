@@ -2,9 +2,21 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/auth0/go-jwt-middleware"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"net/http"
+	"time"
 )
+
+var signingKey = []byte("secret_key") // TODO: Red_byte move to configuration file
+
+var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
+	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+		return signingKey, nil
+	},
+	SigningMethod: jwt.SigningMethodHS256,
+})
 
 type Crypto struct {
 	Id          int
@@ -46,6 +58,17 @@ var GetCryptoHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Requ
 	} else {
 		_, _ = w.Write([]byte("Метод шифрования не найден"))
 	}
+})
+
+var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	// TODO: Red_byte test implementation
+	claims["admin"] = true
+	claims["name"] = "Red Byte"
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+	tokenString, _ := token.SignedString(signingKey)
+	_, _ = w.Write([]byte(tokenString))
 })
 
 var NotImplemented = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
