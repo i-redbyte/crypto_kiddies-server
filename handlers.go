@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/auth0/go-jwt-middleware"
+	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -11,13 +11,6 @@ import (
 )
 
 var signingKey = []byte("secret_key") // TODO: Red_byte move to configuration file
-
-var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
-	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-		return signingKey, nil
-	},
-	SigningMethod: jwt.SigningMethodHS256,
-})
 
 type Crypto struct {
 	Id          int
@@ -30,6 +23,13 @@ var cryptos = []Crypto{
 	{1, "Перестановочный шифр", "transposition", "Описание шифра перестановки"},
 	{2, "Шифр Цезаря", "cipher_caesar", "Описание шифра цезаря"},
 }
+
+var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
+	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+		return signingKey, nil
+	},
+	SigningMethod: jwt.SigningMethodHS256,
+})
 
 var StatusHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write([]byte("API is running"))
