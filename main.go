@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cryptokiddies-server/app"
 	"cryptokiddies-server/controllers"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -10,7 +11,7 @@ import (
 
 func main() {
 	router := mux.NewRouter()
-	router.Use(JwtMiddleware)
+	router.Use(app.JwtMiddleware)
 	router.Handle("/", http.FileServer(http.Dir("./html/")))
 	router.PathPrefix("/static/").Handler(
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
