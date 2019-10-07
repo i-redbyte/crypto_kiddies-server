@@ -1,16 +1,18 @@
 package main
 
+// TODO: split the file into logical components
 import (
+	"context"
+	"cryptokiddies-server/models"
+	u "cryptokiddies-server/utils"
 	"encoding/json"
 	"fmt"
-	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"net/http"
-	"time"
+	"os"
+	"strings"
 )
-
-var signingKey = []byte("secret_key") // TODO: Red_byte move to configuration file
 
 type Crypto struct {
 	Id          int
@@ -24,12 +26,66 @@ var cryptos = []Crypto{
 	{2, "Шифр Цезаря", "cipher_caesar", "Описание шифра цезаря"},
 }
 
-var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
-	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-		return signingKey, nil
-	},
-	SigningMethod: jwt.SigningMethodHS256,
-})
+var JwtMiddleware = func(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		notAuth := []string{"/api/user/registration", "/api/user/login"}
+		requestPath := r.URL.Path
+
+		for _, value := range notAuth {
+			if value == requestPath {
+				next.ServeHTTP(w, r)
+				return
+			}
+		}
+
+		response := make(map[string]interface{})
+		tokenHeader := r.Header.Get("Authorization") //Получение токена
+
+		if tokenHeader == "" { //return code 403  Unauthorized
+			response = u.Message(false, "Отсутствует токен авторизации")
+			w.WriteHeader(http.StatusForbidden)
+			w.Header().Add("Content-Type", "application/json")
+			u.Respond(w, response)
+			return
+		}
+
+		splitted := strings.Split(tokenHeader, " ") //check `Bearer {token-body}`
+		if len(splitted) != 2 {
+			response = u.Message(false, "Invalid/Malformed auth token")
+			w.WriteHeader(http.StatusForbidden)
+			w.Header().Add("Content-Type", "application/json")
+			u.Respond(w, response)
+			return
+		}
+
+		tokenPart := splitted[1] //get jwt token
+		tk := &models.Token{}
+
+		token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
+			return []byte(os.Getenv("token_password")), nil
+		})
+
+		if err != nil { //return code 403  Unauthorized
+			response = u.Message(false, "Неверно сформированный токен аутентификации")
+			w.WriteHeader(http.StatusForbidden)
+			w.Header().Add("Content-Type", "application/json")
+			u.Respond(w, response)
+			return
+		}
+
+		if !token.Valid {
+			response = u.Message(false, "Невалидный токен")
+			w.WriteHeader(http.StatusForbidden)
+			w.Header().Add("Content-Type", "application/json")
+			u.Respond(w, response)
+			return
+		}
+		_ = fmt.Sprintf("User %d", tk.UserId) //Полезно для мониторинга
+		ctx := context.WithValue(r.Context(), "user", tk.UserId)
+		r = r.WithContext(ctx)
+		next.ServeHTTP(w, r)
+	})
+}
 
 var StatusHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write([]byte("API is running"))
@@ -59,17 +115,6 @@ var GetCryptoHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Requ
 	} else {
 		_, _ = w.Write([]byte("Метод шифрования не найден"))
 	}
-})
-
-var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-	// TODO: Red_byte test implementation
-	claims["admin"] = true
-	claims["name"] = "Red Byte"
-	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
-	tokenString, _ := token.SignedString(signingKey)
-	_, _ = w.Write([]byte(tokenString))
 })
 
 var GetLogin = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
