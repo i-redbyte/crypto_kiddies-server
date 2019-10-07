@@ -26,7 +26,7 @@ func init() {
 
 	conn, err := gorm.Open("postgres", dbUri)
 	if err != nil {
-		fmt.Print(err)
+		panic(err)
 	}
 
 	db = conn
