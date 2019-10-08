@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"cryptokiddies-server/models"
+	"cryptokiddies-server/model"
 	u "cryptokiddies-server/utils"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
@@ -44,7 +44,7 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 		}
 
 		tokenPart := splitted[1] //get jwt token
-		tk := &models.Token{}
+		tk := &model.Token{}
 
 		token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
 			return []byte(os.Getenv("token_password")), nil
