@@ -1,4 +1,4 @@
-package models
+package database
 
 import (
 	u "cryptokiddies-server/utils"
@@ -6,7 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"os"
-	"strings"
 )
 
 type Token struct {
@@ -23,9 +22,11 @@ type Account struct {
 
 func (account *Account) Validate() (map[string]interface{}, bool) {
 	// TODO: Red_byte change for good validation
-	if !strings.Contains(account.Email, "@") {
-		return u.Message(false, "Введите корректный E-mail"), false
+	errEmail := u.ValidateFormat(account.Email)
+	if errEmail != nil {
+		return u.Message(false, errEmail.Error()), false
 	}
+
 	if len(account.Password) < 6 {
 		return u.Message(false, "Слишком короткий пароль."), false
 	}
