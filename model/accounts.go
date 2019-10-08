@@ -1,4 +1,4 @@
-package database
+package model
 
 import (
 	u "cryptokiddies-server/utils"
@@ -21,7 +21,6 @@ type Account struct {
 }
 
 func (account *Account) Validate() (map[string]interface{}, bool) {
-	// TODO: Red_byte change for good validation
 	errEmail := u.ValidateFormat(account.Email)
 	if errEmail != nil {
 		return u.Message(false, errEmail.Error()), false
