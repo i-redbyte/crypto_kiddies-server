@@ -1,14 +1,14 @@
 package controllers
 
 import (
-	"cryptokiddies-server/database"
+	"cryptokiddies-server/model"
 	u "cryptokiddies-server/utils"
 	"encoding/json"
 	"net/http"
 )
 
 var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
-	account := &database.Account{}
+	account := &model.Account{}
 	err := json.NewDecoder(r.Body).Decode(account)
 	if err != nil {
 		u.Respond(w, u.Message(false, "Неверный запрос"))
@@ -19,12 +19,12 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 }
 
 var Authenticate = func(w http.ResponseWriter, r *http.Request) {
-	account := &database.Account{}
+	account := &model.Account{}
 	err := json.NewDecoder(r.Body).Decode(account)
 	if err != nil {
 		u.Respond(w, u.Message(false, "Неверный запрос "))
 		return
 	}
-	resp := database.Login(account.Email, account.Password)
+	resp := model.Login(account.Email, account.Password)
 	u.Respond(w, resp)
 }
