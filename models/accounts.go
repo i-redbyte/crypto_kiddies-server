@@ -88,7 +88,7 @@ func Login(email, password string) map[string]interface{} {
 	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
 	account.Token = tokenString
 
-	resp := u.Message(true, "Войти в систему")
+	resp := u.Message(true, "Успешный вход в систему")
 	resp["account"] = account
 	return resp
 }
