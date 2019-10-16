@@ -17,8 +17,8 @@ func main() {
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	router.Handle("/api/status", StatusHandler).Methods("GET")
 	router.Handle("/api/cryptos", controllers.GetCryptoAlgorithmsHandler).Methods("GET")
-	router.Handle("/api/cryptos/{slug}/info", controllers.GetCryptoHandler).Methods("POST")
-	router.Handle("/api/cryptos/{slug}/info", controllers.GetCryptoHandler).Methods("POST")
+	router.Handle("/api/cryptos/{path}/info", controllers.GetCryptoHandler).Methods("GET")
+
 	router.HandleFunc("/api/user/registration", controllers.CreateAccount).Methods("POST")
 	router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
 	//************ test html
