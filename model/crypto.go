@@ -1,13 +1,16 @@
 package model
 
-import "github.com/jinzhu/gorm"
-
 type Crypto struct {
-	gorm.Model
 	Id          int    `json:"id"`
 	Name        string `json:"name"`
 	Path        string `json:"path"`
 	Description string `json:"description"`
+}
+
+func GetCryptos() []Crypto {
+	var cryptos []Crypto
+	GetDB().Table("cryptos").Find(&cryptos)
+	return cryptos
 }
 
 func GetCryptoByPath(path string) *Crypto {
