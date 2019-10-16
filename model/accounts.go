@@ -93,10 +93,10 @@ func Login(email, password string) map[string]interface{} {
 	return resp
 }
 
-func GetAccount(u uint) *Account {
+func GetAccount(id uint) *Account {
 
 	acc := &Account{}
-	GetDB().Table("accounts").Where("id = ?", u).First(acc)
+	GetDB().Table("accounts").Where("id = ?", id).First(acc)
 	if acc.Email == "" {
 		return nil
 	}
