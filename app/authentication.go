@@ -27,8 +27,8 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 
 		if tokenHeader == "" { //return code 403  Unauthorized
 			response = u.Message(false, "Отсутствует токен авторизации")
-			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
+			w.WriteHeader(http.StatusForbidden)
 			u.Respond(w, response)
 			return
 		}
@@ -36,8 +36,8 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 		splitted := strings.Split(tokenHeader, " ") //check `Bearer {token-body}`
 		if len(splitted) != 2 {
 			response = u.Message(false, "Invalid/Malformed auth token")
-			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
+			w.WriteHeader(http.StatusForbidden)
 			u.Respond(w, response)
 			return
 		}
@@ -51,16 +51,16 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 
 		if err != nil { //return code 403  Unauthorized
 			response = u.Message(false, "Неверно сформированный токен аутентификации")
-			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
+			w.WriteHeader(http.StatusForbidden)
 			u.Respond(w, response)
 			return
 		}
 
 		if !token.Valid {
 			response = u.Message(false, "Невалидный токен")
-			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
+			w.WriteHeader(http.StatusForbidden)
 			u.Respond(w, response)
 			return
 		}

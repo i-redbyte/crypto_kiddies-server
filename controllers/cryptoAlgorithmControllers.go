@@ -1,45 +1,41 @@
 package controllers
 
 import (
-	"cryptokiddies-server/utils"
-	"encoding/json"
+	"cryptokiddies-server/model"
+	u "cryptokiddies-server/utils"
 	"github.com/gorilla/mux"
 	"net/http"
 )
 
-type Crypto struct {
-	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	Path        string `json:"path"`
-	Description string `json:"description"`
-}
-
 // TODO: Red_byte get from database
-var cryptos = []Crypto{
+var cryptos = []model.Crypto{
 	{1, "Перестановочный шифр", "transposition", "Описание шифра перестановки"},
 	{2, "Шифр Цезаря", "cipher_caesar", "Описание шифра цезаря"},
 }
 
 var GetCryptoAlgorithmsHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	resp := utils.Message(true, "success")
+	resp := u.Message(true, "success")
 	resp["data"] = cryptos
-	utils.Respond(w, resp)
+	u.Respond(w, resp)
 })
 
 var GetCryptoHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	var crypto Crypto
+	var crypto model.Crypto
 	vars := mux.Vars(r)
-	slug := vars["path"]
+	path := vars["path"]
 	for _, cry := range cryptos {
-		if cry.Path == slug {
+		if cry.Path == path {
 			crypto = cry
 		}
 	}
+	response := u.Message(true, "success")
 	w.Header().Set("Content-Type", "application/json")
 	if crypto.Path != "" {
-		payload, _ := json.Marshal(crypto)
-		_, _ = w.Write(payload)
+		response["data"] = crypto
 	} else {
-		_, _ = w.Write([]byte("Метод шифрования не найден"))
+		w.WriteHeader(http.StatusNotFound)
+		u.Respond(w, u.Message(false, "Метод шифрования не найден"))
+		return
 	}
+	u.Respond(w, response)
 })
