@@ -15,7 +15,6 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		notAuth := []string{"/api/user/registration", "/api/user/login"}
 		requestPath := r.URL.Path
-
 		for _, value := range notAuth {
 			if value == requestPath {
 				next.ServeHTTP(w, r)
@@ -24,7 +23,7 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 		}
 
 		response := make(map[string]interface{})
-		tokenHeader := r.Header.Get("Authorization") //Получение токена
+		tokenHeader := r.Header.Get("Authorization")
 
 		if tokenHeader == "" { //return code 403  Unauthorized
 			response = u.Message(false, "Отсутствует токен авторизации")
@@ -65,7 +64,7 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 			u.Respond(w, response)
 			return
 		}
-		_ = fmt.Sprintf("User %d", tk.UserId) //Полезно для мониторинга
+		_ = fmt.Sprintf("User %d", tk.UserId) //for monitoring
 		ctx := context.WithValue(r.Context(), "user", tk.UserId)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
