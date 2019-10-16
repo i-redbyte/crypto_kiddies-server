@@ -10,7 +10,7 @@ import (
 type Crypto struct {
 	Id          int
 	Name        string
-	Slug        string
+	Path        string
 	Description string
 }
 
@@ -29,14 +29,14 @@ var GetCryptoAlgorithmsHandler = http.HandlerFunc(func(w http.ResponseWriter, r 
 var GetCryptoHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	var crypto Crypto
 	vars := mux.Vars(r)
-	slug := vars["slug"]
+	slug := vars["path"]
 	for _, cry := range cryptos {
-		if cry.Slug == slug {
+		if cry.Path == slug {
 			crypto = cry
 		}
 	}
 	w.Header().Set("Content-Type", "application/json")
-	if crypto.Slug != "" {
+	if crypto.Path != "" {
 		payload, _ := json.Marshal(crypto)
 		_, _ = w.Write(payload)
 	} else {
