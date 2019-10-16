@@ -8,10 +8,10 @@ import (
 )
 
 type Crypto struct {
-	Id          int
-	Name        string
-	Path        string
-	Description string
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	Path        string `json:"path"`
+	Description string `json:"description"`
 }
 
 // TODO: Red_byte get from database
