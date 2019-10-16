@@ -15,7 +15,6 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		notAuth := []string{"/api/user/registration", "/api/user/login"}
 		requestPath := r.URL.Path
-
 		for _, value := range notAuth {
 			if value == requestPath {
 				next.ServeHTTP(w, r)
@@ -24,12 +23,12 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 		}
 
 		response := make(map[string]interface{})
-		tokenHeader := r.Header.Get("Authorization") //Получение токена
+		tokenHeader := r.Header.Get("Authorization")
 
 		if tokenHeader == "" { //return code 403  Unauthorized
 			response = u.Message(false, "Отсутствует токен авторизации")
-			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
+			w.WriteHeader(http.StatusForbidden)
 			u.Respond(w, response)
 			return
 		}
@@ -37,8 +36,8 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 		splitted := strings.Split(tokenHeader, " ") //check `Bearer {token-body}`
 		if len(splitted) != 2 {
 			response = u.Message(false, "Invalid/Malformed auth token")
-			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
+			w.WriteHeader(http.StatusForbidden)
 			u.Respond(w, response)
 			return
 		}
@@ -52,20 +51,20 @@ var JwtMiddleware = func(next http.Handler) http.Handler {
 
 		if err != nil { //return code 403  Unauthorized
 			response = u.Message(false, "Неверно сформированный токен аутентификации")
-			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
+			w.WriteHeader(http.StatusForbidden)
 			u.Respond(w, response)
 			return
 		}
 
 		if !token.Valid {
 			response = u.Message(false, "Невалидный токен")
-			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
+			w.WriteHeader(http.StatusForbidden)
 			u.Respond(w, response)
 			return
 		}
-		_ = fmt.Sprintf("User %d", tk.UserId) //Полезно для мониторинга
+		_ = fmt.Sprintf("User %d", tk.UserId) //for monitoring
 		ctx := context.WithValue(r.Context(), "user", tk.UserId)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
