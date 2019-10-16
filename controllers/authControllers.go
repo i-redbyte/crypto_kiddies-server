@@ -14,8 +14,12 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 		u.Respond(w, u.Message(false, "Неверный запрос"))
 		return
 	}
-	resp := account.Create()
-	u.Respond(w, resp)
+	response := account.Create()
+	if response["status"] == false {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	u.Respond(w, response)
 }
 
 var Authenticate = func(w http.ResponseWriter, r *http.Request) {
@@ -25,6 +29,10 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 		u.Respond(w, u.Message(false, "Неверный запрос "))
 		return
 	}
-	resp := model.Login(account.Email, account.Password)
-	u.Respond(w, resp)
+	response := model.Login(account.Email, account.Password)
+	if response["status"] == false {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	u.Respond(w, response)
 }
