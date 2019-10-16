@@ -7,27 +7,24 @@ import (
 	"net/http"
 )
 
-// TODO: Red_byte get from database
-var cryptos = []model.Crypto{
-	{1, "Перестановочный шифр", "transposition", "Описание шифра перестановки"},
-	{2, "Шифр Цезаря", "cipher_caesar", "Описание шифра цезаря"},
-}
-
 var GetCryptoAlgorithmsHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	resp := u.Message(true, "success")
-	resp["data"] = cryptos
-	u.Respond(w, resp)
+	response := u.Message(true, "success")
+	data := model.GetCryptos()
+	w.Header().Set("Content-Type", "application/json")
+	if len(data) == 0 && data == nil {
+		w.WriteHeader(http.StatusNotFound)
+		u.Respond(w, u.Message(false, "Методы шифрования не найдены"))
+		return
+	}
+	response["data"] = data
+	u.Respond(w, response)
 })
 
 var GetCryptoHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	var crypto model.Crypto
 	vars := mux.Vars(r)
 	path := vars["path"]
-	for _, cry := range cryptos {
-		if cry.Path == path {
-			crypto = cry
-		}
-	}
+	crypto = *model.GetCryptoByPath(path)
 	response := u.Message(true, "success")
 	w.Header().Set("Content-Type", "application/json")
 	if crypto.Path != "" {
