@@ -41,7 +41,7 @@ func (account *Account) Validate() (map[string]interface{}, bool) {
 	return u.Message(false, "Ok!"), true
 }
 
-func (account *Account) Create() map[string]interface{} {
+func (account *Account) CreateAccount() map[string]interface{} {
 	if resp, ok := account.Validate(); !ok {
 		return resp
 	}
@@ -82,7 +82,7 @@ func Login(email, password string) map[string]interface{} {
 	}
 	account.Password = ""
 
-	//Create JWT
+	//CreateAccount JWT
 	tk := &Token{UserId: account.ID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))

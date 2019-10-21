@@ -14,7 +14,7 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 		u.Respond(w, u.Message(false, "Неверный запрос"))
 		return
 	}
-	response := account.Create()
+	response := account.CreateAccount()
 	if response["status"] == false {
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
