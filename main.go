@@ -21,6 +21,7 @@ func main() {
 
 	router.HandleFunc("/api/user/registration", c.CreateAccount).Methods("POST")
 	router.HandleFunc("/api/user/login", c.Authenticate).Methods("POST")
+	router.HandleFunc("/api/game/new", c.CreateGame).Methods("POST")
 	//************ test html
 	router.Handle("/login", GetLogin).Methods("GET")
 	router.Handle("/login", PostLogin).Methods("POST")
