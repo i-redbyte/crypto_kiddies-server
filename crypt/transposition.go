@@ -9,23 +9,11 @@ import (
 Реализация шифра перестановки
 */
 
-var key []int
-
 type RuneSlice []rune
 
 func (p RuneSlice) Len() int           { return len(p) }
 func (p RuneSlice) Less(i, j int) bool { return p[i] < p[j] }
 func (p RuneSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
-
-func SetKey(intKey []int) {
-	key = make([]int, len(intKey))
-	copy(key, intKey)
-}
-
-func SetStringKey(stringKey string) {
-	key = make([]int, GetLength(stringKey))
-	key = getKey(stringKey)
-}
 
 func getKey(keyWord string) []int {
 	keyWord = strings.ToLower(keyWord)
@@ -56,12 +44,8 @@ func getIndex(wordSet []rune, subString rune) int {
 	return 0
 }
 
-func GetLength(text string) int {
-	r := []rune(text)
-	return len(r)
-}
-
-func Encrypt(text []rune) string {
+func Encrypt(text []rune, keyWord string) string {
+	key := getKey(keyWord)
 	space := rune(' ')
 	keyLength := len(key)
 	textLength := len(text)
@@ -81,7 +65,8 @@ func Encrypt(text []rune) string {
 	return result
 }
 
-func Decrypt(text []rune) string {
+func Decrypt(text []rune, keyWord string) string {
+	key := getKey(keyWord)
 	textLength := len(text)
 	keyLength := len(key)
 	result := ""
