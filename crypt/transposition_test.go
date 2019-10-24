@@ -35,8 +35,24 @@ func TestEncrypt(t *testing.T) {
 			t.Error("Строка ", s, " не зашифровалась")
 		}
 	}
+	if _, err := fn(getRandomString(), ""); err == nil {
+		t.Error("Ошибка! шифрование пустой строкой")
+	}
 }
 
 func TestDecrypt(t *testing.T) {
-
+	for _, s := range getTexts() {
+		keyWord := getRandomString()
+		encrypt, err := Encrypt([]rune(s), keyWord)
+		decrypt := Decrypt([]rune(encrypt), keyWord)
+		if err != nil {
+			t.Error(err)
+		}
+		if encrypt == decrypt {
+			t.Error("Строка ", s, " не зашифровалась")
+		}
+		if encrypt == s {
+			t.Error("Строка ", s, " не зашифровалась")
+		}
+	}
 }
