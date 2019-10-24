@@ -1,6 +1,6 @@
 package crypt
 
 const (
-	Eng = "abcdefghijklmnopqrstuvwxyz"
-	Rus = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+	Eng = "abcdefghijklmnopqrstuvwxyz "
+	Rus = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя "
 )

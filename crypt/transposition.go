@@ -1,6 +1,7 @@
 package crypt
 
 import (
+	"errors"
 	"sort"
 	"strings"
 )
@@ -44,12 +45,19 @@ func getIndex(wordSet []rune, subString rune) int {
 	return 0
 }
 
-func Encrypt(text []rune, keyWord string) string {
+func Encrypt(text []rune, keyWord string) (string, error) {
 	key := getKey(keyWord)
 	space := rune(' ')
 	keyLength := len(key)
 	textLength := len(text)
+	if keyLength <= 0 {
+		return "", errors.New("отсутствует ключ")
+	}
+	if textLength <= 0 {
+		return "", errors.New("отсутствует текст шифрования")
+	}
 	n := textLength % keyLength
+
 	for i := 0; i < keyLength-n; i++ {
 		text = append(text, space)
 	}
@@ -62,7 +70,7 @@ func Encrypt(text []rune, keyWord string) string {
 		}
 		result += string(transposition)
 	}
-	return result
+	return result, nil
 }
 
 func Decrypt(text []rune, keyWord string) string {
