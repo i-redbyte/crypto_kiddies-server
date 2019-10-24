@@ -7,9 +7,8 @@ import (
 
 type Game struct {
 	gorm.Model
-	Name        string `json:"name"`
-	Algorithm   Crypto `json:"algorithm"`
-	Description string `json:"description"`
+	Name      string `json:"name"`
+	Algorithm Crypto `json:"algorithm"`
 }
 
 func (game *Game) CreateGame() map[string]interface{} {
