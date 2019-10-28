@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-var GetCryptoAlgorithmsHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+var GetCryptoAlgorithmsHandler = func(w http.ResponseWriter, r *http.Request) {
 	response := u.Message(true, "success")
 	data := model.GetCryptos()
 	w.Header().Set("Content-Type", "application/json")
@@ -18,9 +18,9 @@ var GetCryptoAlgorithmsHandler = http.HandlerFunc(func(w http.ResponseWriter, r 
 	}
 	response["data"] = data
 	u.Respond(w, response)
-})
+}
 
-var GetCryptoHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+var GetCryptoHandler = func(w http.ResponseWriter, r *http.Request) {
 	var crypto model.Crypto
 	vars := mux.Vars(r)
 	slug := vars["slug"]
@@ -35,4 +35,18 @@ var GetCryptoHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	u.Respond(w, response)
-})
+}
+
+var GetCryptoListHandler = func(w http.ResponseWriter, r *http.Request) {
+	// TODO: Red_byte get crypto texts by slug from db
+}
+var GetCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
+	// TODO: Red_byte get crypto text by slug from db
+}
+
+var CreateCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
+	// TODO: Red_byte create crypto text by slug from db
+}
+var SendAnswerToChef = func(w http.ResponseWriter, r *http.Request) {
+	// TODO: Red_byte send an answer to the chef
+}
