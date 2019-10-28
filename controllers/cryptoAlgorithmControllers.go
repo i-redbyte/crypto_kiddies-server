@@ -23,11 +23,11 @@ var GetCryptoAlgorithmsHandler = http.HandlerFunc(func(w http.ResponseWriter, r 
 var GetCryptoHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	var crypto model.Crypto
 	vars := mux.Vars(r)
-	path := vars["path"]
-	crypto = *model.GetCryptoByPath(path)
+	slug := vars["slug"]
+	crypto = *model.GetCryptoByPath(slug)
 	response := u.Message(true, "success")
 	w.Header().Set("Content-Type", "application/json")
-	if crypto.Path != "" {
+	if crypto.Slug != "" {
 		response["data"] = crypto
 	} else {
 		w.WriteHeader(http.StatusNotFound)

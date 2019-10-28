@@ -3,7 +3,7 @@ package model
 type Crypto struct {
 	Id          int    `json:"id"`
 	Name        string `json:"name"`
-	Path        string `json:"path"`
+	Slug        string `json:"slug"`
 	Description string `json:"description"`
 }
 
@@ -13,9 +13,9 @@ func GetCryptos() []Crypto {
 	return cryptos
 }
 
-func GetCryptoByPath(path string) *Crypto {
+func GetCryptoByPath(slug string) *Crypto {
 	crypto := &Crypto{}
-	GetDB().Table("cryptos").Where("path = ?", path).First(crypto)
+	GetDB().Table("cryptos").Where("slug = ?", slug).First(crypto)
 	if crypto.Name == "" {
 		return nil
 	}
