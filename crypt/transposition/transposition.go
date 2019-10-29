@@ -1,4 +1,4 @@
-package crypt
+package transposition
 
 import (
 	"errors"
@@ -73,10 +73,16 @@ func Encrypt(text []rune, keyWord string) (string, error) {
 	return result, nil
 }
 
-func Decrypt(text []rune, keyWord string) string {
+func Decrypt(text []rune, keyWord string) (string, error) {
 	key := getKey(keyWord)
 	textLength := len(text)
 	keyLength := len(key)
+	if keyLength <= 0 {
+		return "", errors.New("отсутствует ключ")
+	}
+	if textLength <= 0 {
+		return "", errors.New("отсутствует текст шифрования")
+	}
 	result := ""
 	for i := 0; i < textLength; i += keyLength {
 		transposition := make([]rune, keyLength)
@@ -85,5 +91,5 @@ func Decrypt(text []rune, keyWord string) string {
 		}
 		result += string(transposition)
 	}
-	return result
+	return result, nil
 }
