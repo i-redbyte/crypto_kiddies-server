@@ -1,6 +1,7 @@
-package crypt
+package transposition
 
 import (
+	"cryptokiddies-server/crypt"
 	"math/rand"
 	"testing"
 )
@@ -17,7 +18,7 @@ func getTexts() []string {
 }
 
 func getRandomString() string {
-	rusRune := []rune(Rus)
+	rusRune := []rune(crypt.Rus)
 	b := make([]rune, rand.Intn(100))
 	for i := range b {
 		b[i] = rusRune[rand.Intn(len(rusRune))]
@@ -44,7 +45,7 @@ func TestDecrypt(t *testing.T) {
 	for _, s := range getTexts() {
 		keyWord := getRandomString()
 		encrypt, err := Encrypt([]rune(s), keyWord)
-		decrypt := Decrypt([]rune(encrypt), keyWord)
+		decrypt, _ := Decrypt([]rune(encrypt), keyWord)
 		if err != nil {
 			t.Error(err)
 		}
