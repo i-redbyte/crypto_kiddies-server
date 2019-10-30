@@ -19,6 +19,7 @@ type GameText struct {
 	AlgorithmId   uint   `json:"algorithmId"`
 	Text          string `json:"text"`
 	Key           string `json:"key"`
+	CreatorId     uint   `json:"creatorId"`
 }
 
 func GetCryptos() []Crypto {
