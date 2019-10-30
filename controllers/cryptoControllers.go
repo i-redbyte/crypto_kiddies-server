@@ -53,6 +53,16 @@ var CreateCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
 		u.Respond(w, u.Message(false, "Неверный запрос"))
 		return
 	}
+	userId, err := model.GetUserId(r)
+	if err != nil || userId == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if err == nil {
+			u.Respond(w, u.Message(false, "Не удалось получить id пользователя"))
+		} else {
+			u.Respond(w, u.Message(false, err.Error()))
+		}
+		return
+	}
 	vars := mux.Vars(r)
 	slug := vars["slug"]
 	text := gameText.Text
@@ -68,6 +78,7 @@ var CreateCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
 	gameText.AlgorithmName = crypto.Name
 	gameText.AlgorithmId = crypto.Id
 	gameText.Text = *encryptText
+	gameText.CreatorId = *userId
 	response := gameText.CreateGameText()
 
 	if response["status"] == false {

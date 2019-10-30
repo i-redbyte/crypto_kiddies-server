@@ -2,10 +2,14 @@ package model
 
 import (
 	u "cryptokiddies-server/utils"
+	"errors"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
+	"net/http"
 	"os"
+	"strings"
 )
 
 type Token struct {
@@ -96,13 +100,32 @@ func Login(email, password string) map[string]interface{} {
 }
 
 func GetAccount(id uint) *Account {
-
 	acc := &Account{}
 	GetDB().Table(tableName).Where("id = ?", id).First(acc)
 	if acc.Email == "" {
 		return nil
 	}
-
 	acc.Password = ""
 	return acc
+}
+
+func GetUserId(r *http.Request) (*uint, error) {
+	tk := &Token{}
+	tokenHeader := r.Header.Get("Authorization")
+	if tokenHeader == "" {
+		return nil, errors.New("отсутствует заголовок Authorization")
+	}
+	splitted := strings.Split(tokenHeader, " ")
+	if len(splitted) != 2 {
+		return nil, errors.New("невалидный токен авторизации")
+	}
+	tokenPart := splitted[1]
+	_, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("token_password")), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(tk.UserId)
+	return &tk.UserId, nil
 }
