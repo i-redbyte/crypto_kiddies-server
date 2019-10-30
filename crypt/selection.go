@@ -19,7 +19,7 @@ func GetCryptoText(slug string, text string, key string) (*string, error) {
 		}
 		return &text, nil
 	case caesar:
-		return nil, nil
+		return nil, errors.New("шифр не найден")
 	default:
 		return nil, errors.New("шифр не найден")
 	}

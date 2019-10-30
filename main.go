@@ -16,14 +16,14 @@ func main() {
 	router.PathPrefix("/static/").Handler(
 		http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	router.Handle("/api/status", StatusHandler).Methods("GET")
+	//-->CRYPTOS
 	router.HandleFunc("/api/cryptos", c.GetCryptoAlgorithmsHandler).Methods("GET")
 	router.HandleFunc("/api/cryptos/{slug}/info", c.GetCryptoHandler).Methods("GET")
-	// TODO: Red_byte release it's dummies:
 	router.HandleFunc("/api/cryptos/{slug}/list", c.GetCryptoListHandler).Methods("GET")
-	router.HandleFunc("/api/cryptos/{slug}/text", c.GetCryptoTextHandler).Methods("POST")
+	router.HandleFunc("/api/cryptos/{slug}/text", c.GetCryptoTextHandler).Methods("GET")
 	router.HandleFunc("/api/cryptos/{slug}/create", c.CreateCryptoTextHandler).Methods("POST")
 	router.HandleFunc("/api/cryptos/{slug}/send", c.SendAnswerToChef).Methods("POST")
-
+	//-->USER
 	router.HandleFunc("/api/user/registration", c.CreateAccount).Methods("POST")
 	router.HandleFunc("/api/user/login", c.Authenticate).Methods("POST")
 	router.HandleFunc("/api/game/new", c.CreateGame).Methods("POST")
