@@ -20,6 +20,8 @@ type Account struct {
 	Token    string `json:"token";sql:"-"`
 }
 
+const tableName = "accounts"
+
 func (account *Account) Validate() (map[string]interface{}, bool) {
 	errEmail := u.ValidateFormat(account.Email)
 	if errEmail != nil {
@@ -31,7 +33,7 @@ func (account *Account) Validate() (map[string]interface{}, bool) {
 	}
 
 	temp := &Account{}
-	err := GetDB().Table("accounts").Where("email = ?", account.Email).First(temp).Error
+	err := GetDB().Table(tableName).Where("email = ?", account.Email).First(temp).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return u.Message(false, "Ошибка соединения. Пожалуйста повторите"), false
 	}
@@ -68,7 +70,7 @@ func (account *Account) CreateAccount() map[string]interface{} {
 
 func Login(email, password string) map[string]interface{} {
 	account := &Account{}
-	err := GetDB().Table("accounts").Where("email = ?", email).First(account).Error
+	err := GetDB().Table(tableName).Where("email = ?", email).First(account).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return u.Message(false, "E-mail не найден")
@@ -96,7 +98,7 @@ func Login(email, password string) map[string]interface{} {
 func GetAccount(id uint) *Account {
 
 	acc := &Account{}
-	GetDB().Table("accounts").Where("id = ?", id).First(acc)
+	GetDB().Table(tableName).Where("id = ?", id).First(acc)
 	if acc.Email == "" {
 		return nil
 	}
