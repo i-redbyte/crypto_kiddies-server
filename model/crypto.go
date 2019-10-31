@@ -16,6 +16,7 @@ type Crypto struct {
 type GameText struct {
 	gorm.Model
 	AlgorithmName string `json:"algorithmName"`
+	AlgorithmSlug string `json:"algorithmSlug"`
 	AlgorithmId   uint   `json:"algorithmId"`
 	Text          string `json:"text"`
 	Key           string `json:"key"`
