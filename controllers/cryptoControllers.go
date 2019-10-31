@@ -12,7 +12,7 @@ import (
 var GetCryptoAlgorithmsHandler = func(w http.ResponseWriter, r *http.Request) {
 	response := u.Message(true, "success")
 	data := model.GetCryptos()
-	if len(data) == 0 && data == nil {
+	if data == nil || len(data) == 0 {
 		w.WriteHeader(http.StatusNotFound)
 		u.Respond(w, u.Message(false, "Методы шифрования не найдены"))
 		return
@@ -38,7 +38,15 @@ var GetCryptoHandler = func(w http.ResponseWriter, r *http.Request) {
 }
 
 var GetCryptoListHandler = func(w http.ResponseWriter, r *http.Request) {
-	// TODO: Red_byte get crypto texts by slug from db
+	response := u.Message(true, "success")
+	data := model.GetGameTexts()
+	if data == nil || len(data) == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		u.Respond(w, u.Message(false, "Шифрованных текстов нет"))
+		return
+	}
+	response["data"] = data
+	u.Respond(w, response)
 }
 var GetCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
 	// TODO: Red_byte get crypto text by slug from db
