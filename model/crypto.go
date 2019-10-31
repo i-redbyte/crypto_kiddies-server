@@ -63,8 +63,9 @@ func GetGameText(id uint) *GameText {
 	return gameText
 }
 
-func GetGameTexts() []Crypto {
-	var cryptos []Crypto
-	GetDB().Table("cryptos").Find(&cryptos)
-	return cryptos
+func GetGameTexts(slug string) []GameText {
+	var texts []GameText
+	GetDB().Table(gtTableName).Where("algorithm_slug = ?", slug).Find(&texts)
+	fmt.Println(texts)
+	return texts
 }
