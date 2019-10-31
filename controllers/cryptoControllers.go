@@ -40,7 +40,8 @@ var GetCryptoHandler = func(w http.ResponseWriter, r *http.Request) {
 
 var GetCryptoListHandler = func(w http.ResponseWriter, r *http.Request) {
 	response := u.Message(true, "success")
-	data := model.GetGameTexts()
+	slug := mux.Vars(r)["slug"]
+	data := model.GetGameTexts(slug)
 	if data == nil || len(data) == 0 {
 		w.WriteHeader(http.StatusNotFound)
 		u.Respond(w, u.Message(false, "Шифрованных текстов нет"))
