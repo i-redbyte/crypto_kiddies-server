@@ -102,6 +102,7 @@ var CreateCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	gameText.AlgorithmName = crypto.Name
+	gameText.AlgorithmSlug = crypto.Slug
 	gameText.AlgorithmId = crypto.Id
 	gameText.Text = *encryptText
 	gameText.CreatorId = *userId
