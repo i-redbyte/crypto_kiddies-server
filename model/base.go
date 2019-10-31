@@ -32,6 +32,8 @@ func init() {
 	db = conn
 	db.Debug().AutoMigrate(&Account{})
 	db.Debug().AutoMigrate(&GameText{})
+	// TODO: Red_byte formalize the essence of the "game"
+	//db.Debug().AutoMigrate(&Game{})
 }
 
 func GetDB() *gorm.DB {
