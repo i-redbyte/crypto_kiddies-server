@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
 
 var GetCryptoAlgorithmsHandler = func(w http.ResponseWriter, r *http.Request) {
@@ -49,7 +50,24 @@ var GetCryptoListHandler = func(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, response)
 }
 var GetCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
-	// TODO: Red_byte get crypto text by slug from db
+	response := u.Message(true, "success")
+	idString := r.PostForm.Get("id")
+	if idString == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		u.Respond(w, u.Message(false, "Неверный запрос"))
+	}
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		u.Respond(w, u.Message(false, "Неверный формат id"))
+	}
+	gameText := model.GetGameText(uint(id))
+	if gameText == nil {
+		w.WriteHeader(http.StatusNotFound)
+		u.Respond(w, u.Message(false, "Данные с id = "+string(id)+"не найдены"))
+	}
+	response["data"] = gameText
+	u.Respond(w, response)
 }
 
 var CreateCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
