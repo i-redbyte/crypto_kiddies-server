@@ -5,10 +5,14 @@ import (
 	"cryptokiddies-server/model"
 	u "cryptokiddies-server/utils"
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
-	"strconv"
 )
+
+type Id struct {
+	ID int `json:"id"`
+}
 
 var GetCryptoAlgorithmsHandler = func(w http.ResponseWriter, r *http.Request) {
 	response := u.Message(true, "success")
@@ -52,20 +56,19 @@ var GetCryptoListHandler = func(w http.ResponseWriter, r *http.Request) {
 }
 var GetCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
 	response := u.Message(true, "success")
-	idString := r.PostForm.Get("id")
-	if idString == "" {
+	id := &Id{}
+	err := json.NewDecoder(r.Body).Decode(id)
+	fmt.Println("idString", id)
+	if err != nil || id.ID <= 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		u.Respond(w, u.Message(false, "Неверный запрос"))
+		return
 	}
-	id, err := strconv.Atoi(idString)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		u.Respond(w, u.Message(false, "Неверный формат id"))
-	}
-	gameText := model.GetGameText(uint(id))
+	gameText := model.GetGameText(uint(id.ID))
 	if gameText == nil {
 		w.WriteHeader(http.StatusNotFound)
-		u.Respond(w, u.Message(false, "Данные с id = "+string(id)+"не найдены"))
+		u.Respond(w, u.Message(false, "Данные с id = "+string(id.ID)+"не найдены"))
+		return
 	}
 	response["data"] = gameText
 	u.Respond(w, response)
