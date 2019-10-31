@@ -22,9 +22,12 @@ type GameText struct {
 	CreatorId     uint   `json:"creatorId"`
 }
 
+const gtTableName = "game_texts"
+const cryptoTableName = "cryptos"
+
 func GetCryptos() []Crypto {
 	var cryptos []Crypto
-	GetDB().Table("cryptos").Find(&cryptos)
+	GetDB().Table(cryptoTableName).Find(&cryptos)
 	return cryptos
 }
 
@@ -48,4 +51,19 @@ func (gameText *GameText) CreateGameText() map[string]interface{} {
 	response := u.Message(true, "Текст создан")
 	response["data"] = gameText
 	return response
+}
+
+func GetGameText(id uint) *GameText {
+	gameText := &GameText{}
+	GetDB().Table(gtTableName).Where("id = ?", id).First(gameText)
+	if gameText.Text == "" {
+		return nil
+	}
+	return gameText
+}
+
+func GetGameTexts() []Crypto {
+	var cryptos []Crypto
+	GetDB().Table("cryptos").Find(&cryptos)
+	return cryptos
 }
