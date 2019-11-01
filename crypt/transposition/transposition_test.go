@@ -1,7 +1,8 @@
 package transposition
 
 import (
-	"cryptokiddies-server/crypt"
+	"strings"
+
 	"math/rand"
 	"testing"
 )
@@ -18,7 +19,7 @@ func getTexts() []string {
 }
 
 func getRandomString() string {
-	rusRune := []rune(crypt.Rus)
+	rusRune := []rune(Rus)
 	b := make([]rune, rand.Intn(100))
 	for i := range b {
 		b[i] = rusRune[rand.Intn(len(rusRune))]
@@ -55,5 +56,20 @@ func TestDecrypt(t *testing.T) {
 		if encrypt == s {
 			t.Error("Строка ", s, " не зашифровалась")
 		}
+	}
+}
+
+func TestEncryptDecrypt(t *testing.T) {
+	text := "Тестовый text для проверки yeap!"
+	key1 := "testKey"
+	key2 := "Тестовый ключ"
+	encrypt, _ := Encrypt([]rune(text), key1)
+	decrypt, _ := Decrypt([]rune(encrypt), key1)
+	if strings.Contains(decrypt, text) == false {
+		t.Error("Строка расшифровалась не правильно")
+	}
+	decrypt, _ = Decrypt([]rune(encrypt), key2)
+	if strings.Contains(decrypt, text) == true {
+		t.Error("Строка расшифрована другим ключем")
 	}
 }
