@@ -77,6 +77,11 @@ func Decrypt(text []rune, keyWord string) (string, error) {
 	key := getKey(keyWord)
 	textLength := len(text)
 	keyLength := len(key)
+	space := rune(' ')
+	n := textLength % keyLength
+	for i := 0; i < keyLength-n; i++ {
+		text = append(text, space)
+	}
 	if keyLength <= 0 {
 		return "", errors.New("отсутствует ключ")
 	}

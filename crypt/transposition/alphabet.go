@@ -1,4 +1,4 @@
-package crypt
+package transposition
 
 const (
 	Eng = "abcdefghijklmnopqrstuvwxyz "
