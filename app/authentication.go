@@ -13,7 +13,12 @@ import (
 
 var JwtMiddleware = func(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		notAuth := []string{"/api/user/registration", "/api/user/login"}
+		notAuth := []string{
+			"/api/user/registration",
+			"/api/user/login",
+			"/login",
+			"/api/status",
+		}
 		requestPath := r.URL.Path
 		for _, value := range notAuth {
 			if value == requestPath {
