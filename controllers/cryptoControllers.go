@@ -8,11 +8,8 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
-
-type Id struct {
-	ID int `json:"id"`
-}
 
 var GetCryptoAlgorithmsHandler = func(w http.ResponseWriter, r *http.Request) {
 	response := u.Message(true, "success")
@@ -56,18 +53,19 @@ var GetCryptoListHandler = func(w http.ResponseWriter, r *http.Request) {
 }
 var GetCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
 	response := u.Message(true, "success")
-	id := &Id{}
-	err := json.NewDecoder(r.Body).Decode(id)
+	keys := r.URL.Query()
+	id, err := strconv.Atoi(keys.Get("id"))
 	fmt.Println("idString", id)
-	if err != nil || id.ID <= 0 {
+	if err != nil || id <= 0 {
+		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		u.Respond(w, u.Message(false, "Неверный запрос"))
 		return
 	}
-	gameText := model.GetGameText(uint(id.ID))
+	gameText := model.GetGameText(uint(id))
 	if gameText == nil {
 		w.WriteHeader(http.StatusNotFound)
-		u.Respond(w, u.Message(false, "Данные с id = "+string(id.ID)+"не найдены"))
+		u.Respond(w, u.Message(false, "Данные с id = "+string(id)+"не найдены"))
 		return
 	}
 	response["data"] = gameText
