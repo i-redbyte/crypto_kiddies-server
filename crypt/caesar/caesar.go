@@ -13,7 +13,7 @@ const (
 	ENG_LOWER_CASE = 97
 )
 
-func Encrypt(text []rune, shift int) (string, error) {
+func CaesarCipher(text []rune, shift int) (string, error) {
 	if len(text) == 0 {
 		return "", errors.New("отсутствует текст шифрования")
 	}
@@ -23,7 +23,6 @@ func Encrypt(text []rune, shift int) (string, error) {
 	result := make([]rune, len(text))
 
 	for i, r := range text {
-
 		if r >= 'а' && r <= 'я' {
 			c := (int(r) + shift - RUS_LOWER_CASE) % RUS
 			result[i] = rune(c + RUS_LOWER_CASE)
