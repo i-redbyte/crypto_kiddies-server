@@ -9,7 +9,7 @@ import (
 //noinspection GoSnakeCaseUsage
 const (
 	RUS            = 32
-	ENG            = 25
+	ENG            = 26
 	RUS_LOWER_CASE = 1072
 	ENG_LOWER_CASE = 97
 )
@@ -29,6 +29,10 @@ func CipherCaesar(text []rune, shift int) (string, error) {
 			result[i] = rune(c + RUS_LOWER_CASE)
 		} else if r >= 'a' && r <= 'z' {
 			c := (int(r) + shift - ENG_LOWER_CASE) % ENG
+			if shift < 0 && (c+ENG_LOWER_CASE) < 'a' {
+				c += 26
+			}
+
 			result[i] = rune(c + ENG_LOWER_CASE)
 		} else {
 			result[i] = r
