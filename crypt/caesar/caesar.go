@@ -2,6 +2,7 @@ package caesar
 
 import (
 	"errors"
+	"strings"
 	"unicode"
 )
 
@@ -13,9 +14,9 @@ const (
 	ENG_LOWER_CASE = 97
 )
 
-func CaesarCipher(text []rune, shift int) (string, error) {
+func CipherCaesar(text []rune, shift int) (string, error) {
 	if len(text) == 0 {
-		return "", errors.New("отсутствует текст шифрования")
+		return string(text), errors.New("отсутствует текст шифрования")
 	}
 	for i, r := range text {
 		text[i] = unicode.ToLower(r)
@@ -26,12 +27,12 @@ func CaesarCipher(text []rune, shift int) (string, error) {
 		if r >= 'а' && r <= 'я' {
 			c := (int(r) + shift - RUS_LOWER_CASE) % RUS
 			result[i] = rune(c + RUS_LOWER_CASE)
-		}
-
-		if r >= 'a' && r <= 'z' {
+		} else if r >= 'a' && r <= 'z' {
 			c := (int(r) + shift - ENG_LOWER_CASE) % ENG
 			result[i] = rune(c + ENG_LOWER_CASE)
+		} else {
+			result[i] = r
 		}
 	}
-	return string(result), nil
+	return strings.ToLower(string(result)), nil
 }
