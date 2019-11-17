@@ -51,6 +51,7 @@ var GetCryptoListHandler = func(w http.ResponseWriter, r *http.Request) {
 	response["data"] = data
 	u.Respond(w, response)
 }
+
 var GetCryptoTextHandler = func(w http.ResponseWriter, r *http.Request) {
 	response := u.Message(true, "success")
 	keys := r.URL.Query()
