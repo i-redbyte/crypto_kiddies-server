@@ -2,6 +2,7 @@ package caesar
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 	"unicode"
 )
@@ -14,7 +15,11 @@ const (
 	ENG_LOWER_CASE = 97
 )
 
-func CipherCaesar(text []rune, shift int) (string, error) {
+func CipherCaesar(text []rune, key string) (string, error) {
+	shift, err := strconv.Atoi(key)
+	if err != nil {
+		return string(text), err
+	}
 	if len(text) == 0 {
 		return string(text), errors.New("отсутствует текст шифрования")
 	}
@@ -32,7 +37,6 @@ func CipherCaesar(text []rune, shift int) (string, error) {
 			if shift < 0 && (c+ENG_LOWER_CASE) < 'a' {
 				c += ENG
 			}
-
 			result[i] = rune(c + ENG_LOWER_CASE)
 		} else {
 			result[i] = r

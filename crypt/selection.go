@@ -1,8 +1,10 @@
 package crypt
 
 import (
+	csr "cryptokiddies-server/crypt/caesar"
 	trans "cryptokiddies-server/crypt/transposition"
 	"errors"
+	"fmt"
 )
 
 const (
@@ -19,7 +21,12 @@ func GetCryptoText(slug string, text string, key string) (*string, error) {
 		}
 		return &text, nil
 	case caesar:
-		return nil, errors.New("шифр не найден")
+		text, err := csr.CipherCaesar([]rune(text), key)
+		if err != nil {
+			fmt.Println("ERROR!", err)
+			return nil, err
+		}
+		return &text, nil
 	default:
 		return nil, errors.New("шифр не найден")
 	}
@@ -34,7 +41,11 @@ func GetDecryptText(slug string, text string, key string) (*string, error) {
 		}
 		return &text, nil
 	case caesar:
-		return nil, nil
+		text, err := csr.CipherCaesar([]rune(text), key)
+		if err != nil {
+			return nil, err
+		}
+		return &text, nil
 	default:
 		return nil, errors.New("текст не найден")
 	}
