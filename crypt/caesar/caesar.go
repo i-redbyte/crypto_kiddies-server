@@ -30,7 +30,7 @@ func CipherCaesar(text []rune, shift int) (string, error) {
 		} else if r >= 'a' && r <= 'z' {
 			c := (int(r) + shift - ENG_LOWER_CASE) % ENG
 			if shift < 0 && (c+ENG_LOWER_CASE) < 'a' {
-				c += 26
+				c += ENG
 			}
 
 			result[i] = rune(c + ENG_LOWER_CASE)
