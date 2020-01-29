@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"cryptokiddies-server/crypt"
-	"cryptokiddies-server/model"
-	u "cryptokiddies-server/utils"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/ilya-sokolov/crypto_kiddies-server/crypt"
+	"github.com/ilya-sokolov/crypto_kiddies-server/model"
+	u "github.com/ilya-sokolov/crypto_kiddies-server/utils"
 	"net/http"
 	"strconv"
 )

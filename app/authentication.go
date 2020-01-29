@@ -2,10 +2,11 @@ package app
 
 import (
 	"context"
-	"cryptokiddies-server/model"
-	u "cryptokiddies-server/utils"
+	"github.com/ilya-sokolov/crypto_kiddies-server/model"
+
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	u "github.com/ilya-sokolov/crypto_kiddies-server/utils"
 	"net/http"
 	"os"
 	"strings"

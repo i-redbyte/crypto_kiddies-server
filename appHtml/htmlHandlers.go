@@ -1,4 +1,4 @@
-package main
+package appHtml
 
 // TODO: split the file into logical components
 import (

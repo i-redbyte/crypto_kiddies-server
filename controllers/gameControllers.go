@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"cryptokiddies-server/model"
-	u "cryptokiddies-server/utils"
 	"encoding/json"
+	"github.com/ilya-sokolov/crypto_kiddies-server/model"
+	u "github.com/ilya-sokolov/crypto_kiddies-server/utils"
 	"net/http"
 )
 

@@ -1,10 +1,10 @@
 package model
 
 import (
-	u "cryptokiddies-server/utils"
 	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	u "github.com/ilya-sokolov/crypto_kiddies-server/utils"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"

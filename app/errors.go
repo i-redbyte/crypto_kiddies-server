@@ -1,7 +1,7 @@
 package app
 
 import (
-	u "cryptokiddies-server/utils"
+	u "github.com/ilya-sokolov/crypto_kiddies-server/utils"
 	"net/http"
 )
 

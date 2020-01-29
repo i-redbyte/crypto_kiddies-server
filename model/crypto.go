@@ -1,8 +1,8 @@
 package model
 
 import (
-	u "cryptokiddies-server/utils"
 	"fmt"
+	u "github.com/ilya-sokolov/crypto_kiddies-server/utils"
 	"github.com/jinzhu/gorm"
 )
 

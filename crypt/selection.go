@@ -1,10 +1,10 @@
 package crypt
 
 import (
-	csr "cryptokiddies-server/crypt/caesar"
-	trans "cryptokiddies-server/crypt/transposition"
 	"errors"
 	"fmt"
+	csr "github.com/ilya-sokolov/crypto_kiddies-server/crypt/caesar"
+	trans "github.com/ilya-sokolov/crypto_kiddies-server/crypt/transposition"
 )
 
 const (
