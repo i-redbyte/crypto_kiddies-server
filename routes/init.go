@@ -7,7 +7,6 @@ import (
 
 func Router() *gin.Engine {
 	e := gin.Default()
-	e.Static("/html", "./html")
 	api := e.Group("/api")
 	api.POST("/registration", user.CreateAccount)
 	api.POST("/login", user.Authorization)

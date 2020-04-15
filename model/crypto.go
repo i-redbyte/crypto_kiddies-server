@@ -3,7 +3,6 @@ package model
 import (
 	"fmt"
 	. "github.com/ilya-sokolov/crypto_kiddies-server/database"
-	u "github.com/ilya-sokolov/crypto_kiddies-server/utils"
 	"github.com/jinzhu/gorm"
 )
 
@@ -47,12 +46,13 @@ func (gameText *GameText) CreateGameText() map[string]interface{} {
 	if err := DB.Create(gameText).Error; err != nil {
 		fmt.Println(err)
 	}
-	if gameText.ID <= 0 {
-		return u.Message(false, "Не удалось создать текст, ошибка подключения к БД.")
-	}
-	response := u.Message(true, "Текст создан")
-	response["data"] = gameText
-	return response
+	// TODO: Red_byte refactoring this:
+	//if gameText.ID <= 0 {
+	//	return u.Message(false, "Не удалось создать текст, ошибка подключения к БД.")
+	//}
+	//response := u.Message(true, "Текст создан")
+	//response["data"] = gameText
+	return map[string]interface{}{}
 }
 
 func GetGameText(id uint) *GameText {
