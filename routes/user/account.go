@@ -30,14 +30,14 @@ func CreateAccount(ctx *gin.Context) {
 
 func Authorization(ctx *gin.Context) {
 	type request struct {
-		AccountId string `json:"accountId" validate:"required,gt=0"`
-		Password  string `json:"password" validate:"required,gt=5,lt=100"`
+		NickName string `json:"nickName" validate:"required,gt=0"`
+		Password string `json:"password" validate:"required,gt=5,lt=100"`
 	}
 	var r request
 	if err := BindAndValidate(ctx, &r); err != nil {
 		return
 	}
-	account, err := model.GetAccount(r.AccountId, r.Password)
+	account, err := model.GetAccount(r.NickName, r.Password)
 	if err != nil {
 		ResponseError(ctx, http.StatusInternalServerError, ErrorMessage{Message: err.Error()})
 		return

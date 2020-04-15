@@ -10,8 +10,8 @@ import (
 
 type Account struct {
 	BaseModel
-	NickName string `json:"nickName" gorm:"column:nickName"`
-	Password []byte `json:"-" gorm:"column:password"`
+	NickName string `json:"nickName"`
+	Password []byte `json:"-"`
 }
 
 func (account *Account) Token() string {
@@ -50,10 +50,9 @@ func CreateAccount(nickName string, pass string) (*Account, error) {
 	return acc, nil
 }
 
-// TODO: refactor this
-func GetAccount(accountId string, pass string) (*Account, error) {
+func GetAccount(nickName string, pass string) (*Account, error) {
 	acc := &Account{}
-	if err := DB.Model(acc).Where("id = ?", accountId).First(acc).Error; err != nil {
+	if err := DB.Model(&Account{}).Where("nick_name = ?", nickName).First(acc).Error; err != nil {
 		return nil, err
 	}
 	if err := bcrypt.CompareHashAndPassword(acc.Password, []byte(pass)); err != nil {
