@@ -18,7 +18,7 @@ func main() {
 	password := os.Getenv("db_pass")
 	dbName := os.Getenv("db_name")
 	dbHost := os.Getenv("db_host")
-	_, err = database.Connect(dbHost, dbName, userName, password)
+	database.DB, err = database.Connect(dbHost, dbName, userName, password)
 	model.InitMigration()
 	if err != nil {
 		panic(err)
