@@ -3,14 +3,14 @@ package database
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 var DB *gorm.DB
 
-func Connect(host, database, user, password string) (*gorm.DB, error) {
+// TODO: 30.03.2020 Create db interface
+func Connect(host, db, user, password string) (*gorm.DB, error) {
 	var err error
-	dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", host, user, database, password)
+	dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", host, user, db, password)
 	DB, err = gorm.Open("postgres", dbUri)
 	if err != nil {
 		panic(err)
@@ -19,6 +19,6 @@ func Connect(host, database, user, password string) (*gorm.DB, error) {
 }
 
 // Disconnect - close db
-func Disconnect(database *gorm.DB) error {
-	return database.Close()
+func Disconnect(db *gorm.DB) error {
+	return db.Close()
 }
