@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	. "github.com/ilya-sokolov/crypto_kiddies-server/database"
 	u "github.com/ilya-sokolov/crypto_kiddies-server/utils"
 	"github.com/jinzhu/gorm"
 )
@@ -28,13 +29,13 @@ const cryptoTableName = "cryptos"
 
 func GetCryptos() []Crypto {
 	var cryptos []Crypto
-	GetDB().Table(cryptoTableName).Find(&cryptos)
+	DB.Table(cryptoTableName).Find(&cryptos)
 	return cryptos
 }
 
 func GetCryptoByPath(slug string) *Crypto {
 	crypto := &Crypto{}
-	GetDB().Table("cryptos").Where("slug = ?", slug).First(crypto)
+	DB.Table("cryptos").Where("slug = ?", slug).First(crypto)
 	if crypto.Name == "" {
 		return nil
 	}
@@ -43,7 +44,7 @@ func GetCryptoByPath(slug string) *Crypto {
 
 func (gameText *GameText) CreateGameText() map[string]interface{} {
 	gameText.AlgorithmId = 0
-	if err := GetDB().Create(gameText).Error; err != nil {
+	if err := DB.Create(gameText).Error; err != nil {
 		fmt.Println(err)
 	}
 	if gameText.ID <= 0 {
@@ -56,7 +57,7 @@ func (gameText *GameText) CreateGameText() map[string]interface{} {
 
 func GetGameText(id uint) *GameText {
 	gameText := &GameText{}
-	GetDB().Table(gtTableName).Where("id = ?", id).First(gameText)
+	DB.Table(gtTableName).Where("id = ?", id).First(gameText)
 	if gameText.Text == "" {
 		return nil
 	}
@@ -65,7 +66,7 @@ func GetGameText(id uint) *GameText {
 
 func GetGameTexts(slug string) []GameText {
 	var texts []GameText
-	GetDB().Table(gtTableName).Where("algorithm_slug = ?", slug).Find(&texts)
+	DB.Table(gtTableName).Where("algorithm_slug = ?", slug).Find(&texts)
 	fmt.Println(texts)
 	return texts
 }

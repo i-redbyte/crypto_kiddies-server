@@ -1,6 +1,7 @@
 package model
 
 import (
+	. "github.com/ilya-sokolov/crypto_kiddies-server/database"
 	u "github.com/ilya-sokolov/crypto_kiddies-server/utils"
 	"github.com/jinzhu/gorm"
 )
@@ -12,7 +13,7 @@ type Game struct {
 }
 
 func (game *Game) CreateGame() map[string]interface{} {
-	GetDB().Create(game)
+	DB.Create(game)
 	if game.ID <= 0 {
 		return u.Message(false, "Не удалось создать игру, ошибка подключения.")
 	}
@@ -22,7 +23,7 @@ func (game *Game) CreateGame() map[string]interface{} {
 }
 
 func (game *Game) RemoveGame() map[string]interface{} {
-	GetDB().Delete(&game)
+	DB.Delete(&game)
 	response := u.Message(true, "Игра "+game.Name+" удалена")
 	return response
 }
