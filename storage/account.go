@@ -11,6 +11,7 @@ import (
 type Account struct {
 	BaseModel
 	NickName string `json:"nickName"`
+	Email    string `json:"email"`
 	Password []byte `json:"-"`
 }
 
@@ -37,12 +38,17 @@ func ParseToken(t string, secret []byte) (*Token, error) {
 	return tk, err
 }
 
-func CreateAccount(nickName string, pass string) (*Account, error) {
+func CreateAccount(nickName, email, pass string) (*Account, error) {
+	tmpAccount := &Account{}
+	DB.Where("email = ?", email).First(tmpAccount)
+	if tmpAccount.Email != "" {
+		return nil, errors.UserAlreadyExists
+	}
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
 	}
-	acc := &Account{NickName: nickName, Password: passwordHash}
+	acc := &Account{NickName: nickName, Email: email, Password: passwordHash}
 	err = DB.Create(acc).Error
 	if err != nil {
 		return nil, err

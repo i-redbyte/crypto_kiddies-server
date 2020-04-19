@@ -15,12 +15,13 @@ func CreateAccount(ctx *gin.Context) {
 	type request struct {
 		NickName string `json:"nickName" validate:"required,gt=1,lt=100"`
 		Password string `json:"password" validate:"required,gt=5,lt=100"`
+		Email    string `json:"email" validate:"required,email,gt=5,lt=100"`
 	}
 	var r request
 	if err := rest.BindAndValidate(ctx, &r); err != nil {
 		return
 	}
-	account, err := storage.CreateAccount(r.NickName, r.Password)
+	account, err := storage.CreateAccount(r.NickName, r.Email, r.Password)
 	if err != nil {
 		rest.ResponseError(ctx, http.StatusInternalServerError, rest.ErrorMessage{Message: err.Error()})
 		return
