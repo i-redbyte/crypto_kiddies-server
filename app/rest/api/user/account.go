@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
-	. "github.com/ilya-sokolov/crypto_kiddies-server/common"
+	"github.com/ilya-sokolov/crypto_kiddies-server/app/rest"
 	"github.com/ilya-sokolov/crypto_kiddies-server/model"
 	"net/http"
 )
@@ -17,15 +17,15 @@ func CreateAccount(ctx *gin.Context) {
 		Password string `json:"password" validate:"required,gt=5,lt=100"`
 	}
 	var r request
-	if err := BindAndValidate(ctx, &r); err != nil {
+	if err := rest.BindAndValidate(ctx, &r); err != nil {
 		return
 	}
 	account, err := model.CreateAccount(r.NickName, r.Password)
 	if err != nil {
-		ResponseError(ctx, http.StatusInternalServerError, ErrorMessage{Message: err.Error()})
+		rest.ResponseError(ctx, http.StatusInternalServerError, rest.ErrorMessage{Message: err.Error()})
 		return
 	}
-	ResponseSuccess(ctx, http.StatusCreated, AccountResponse{Account: *account, Token: account.Token()})
+	rest.ResponseSuccess(ctx, http.StatusCreated, AccountResponse{Account: *account, Token: account.Token()})
 }
 
 func Authorization(ctx *gin.Context) {
@@ -34,15 +34,15 @@ func Authorization(ctx *gin.Context) {
 		Password string `json:"password" validate:"required,gt=5,lt=100"`
 	}
 	var r request
-	if err := BindAndValidate(ctx, &r); err != nil {
+	if err := rest.BindAndValidate(ctx, &r); err != nil {
 		return
 	}
 	account, err := model.GetAccount(r.NickName, r.Password)
 	if err != nil {
-		ResponseError(ctx, http.StatusInternalServerError, ErrorMessage{Message: err.Error()})
+		rest.ResponseError(ctx, http.StatusInternalServerError, rest.ErrorMessage{Message: err.Error()})
 		return
 	}
-	ResponseSuccess(ctx, http.StatusOK, AccountResponse{Account: *account, Token: account.Token()})
+	rest.ResponseSuccess(ctx, http.StatusOK, AccountResponse{Account: *account, Token: account.Token()})
 }
 
 type AccountResponse struct {

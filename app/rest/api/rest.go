@@ -1,8 +1,8 @@
-package routes
+package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ilya-sokolov/crypto_kiddies-server/routes/user"
+	"github.com/ilya-sokolov/crypto_kiddies-server/app/rest/api/user"
 )
 
 func Router() *gin.Engine {

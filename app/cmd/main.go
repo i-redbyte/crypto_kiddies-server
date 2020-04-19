@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/ilya-sokolov/crypto_kiddies-server/app/rest/api"
 	"github.com/ilya-sokolov/crypto_kiddies-server/database"
 	"github.com/ilya-sokolov/crypto_kiddies-server/model"
-	"github.com/ilya-sokolov/crypto_kiddies-server/routes"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -29,7 +29,7 @@ func main() {
 			panic(err)
 		}
 	}()
-	app := routes.Router()
+	app := api.Router()
 	err = app.Run(":4000")
 	if err != nil {
 		panic(err)

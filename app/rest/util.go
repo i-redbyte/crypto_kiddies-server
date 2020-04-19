@@ -1,9 +1,9 @@
-package common
+package rest
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"github.com/ilya-sokolov/crypto_kiddies-server/check"
+	"github.com/ilya-sokolov/crypto_kiddies-server/app/rest/check"
 	"net/http"
 )
 

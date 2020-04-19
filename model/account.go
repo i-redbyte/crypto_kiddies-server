@@ -2,8 +2,8 @@ package model
 
 import (
 	"github.com/dgrijalva/jwt-go"
+	"github.com/ilya-sokolov/crypto_kiddies-server/app/rest/errors"
 	. "github.com/ilya-sokolov/crypto_kiddies-server/database"
-	"github.com/ilya-sokolov/crypto_kiddies-server/errors"
 	"golang.org/x/crypto/bcrypt"
 	"os"
 )
