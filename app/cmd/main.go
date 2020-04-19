@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/ilya-sokolov/crypto_kiddies-server/app/rest/api"
 	"github.com/ilya-sokolov/crypto_kiddies-server/database"
-	"github.com/ilya-sokolov/crypto_kiddies-server/model"
+	"github.com/ilya-sokolov/crypto_kiddies-server/storage"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -19,7 +19,7 @@ func main() {
 	dbName := os.Getenv("db_name")
 	dbHost := os.Getenv("db_host")
 	database.DB, err = database.Connect(dbHost, dbName, userName, password)
-	model.InitMigration()
+	storage.InitMigration()
 	if err != nil {
 		panic(err)
 	}

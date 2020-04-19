@@ -1,4 +1,4 @@
-package model
+package storage
 
 import . "github.com/ilya-sokolov/crypto_kiddies-server/database"
 

@@ -3,7 +3,7 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/ilya-sokolov/crypto_kiddies-server/app/rest"
-	"github.com/ilya-sokolov/crypto_kiddies-server/model"
+	"github.com/ilya-sokolov/crypto_kiddies-server/storage"
 	"net/http"
 )
 
@@ -20,7 +20,7 @@ func CreateAccount(ctx *gin.Context) {
 	if err := rest.BindAndValidate(ctx, &r); err != nil {
 		return
 	}
-	account, err := model.CreateAccount(r.NickName, r.Password)
+	account, err := storage.CreateAccount(r.NickName, r.Password)
 	if err != nil {
 		rest.ResponseError(ctx, http.StatusInternalServerError, rest.ErrorMessage{Message: err.Error()})
 		return
@@ -37,7 +37,7 @@ func Authorization(ctx *gin.Context) {
 	if err := rest.BindAndValidate(ctx, &r); err != nil {
 		return
 	}
-	account, err := model.GetAccount(r.NickName, r.Password)
+	account, err := storage.GetAccount(r.NickName, r.Password)
 	if err != nil {
 		rest.ResponseError(ctx, http.StatusInternalServerError, rest.ErrorMessage{Message: err.Error()})
 		return
@@ -46,6 +46,6 @@ func Authorization(ctx *gin.Context) {
 }
 
 type AccountResponse struct {
-	model.Account
+	storage.Account
 	Token string `json:"token"`
 }
